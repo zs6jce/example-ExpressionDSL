@@ -1,0 +1,118 @@
+grammar org.xtext.example.expressiondsl.ExpressionDSL with org.eclipse.xtext.common.Terminals
+
+generate expressionDSL "http://www.xtext.org/example/expressiondsl/ExpressionDSL"
+
+Model:
+	statments+=Statement*;
+
+Statement:
+	VariableDef	|
+	ConstDef	|
+	FunctionDef	|
+	FunctionCall
+//	VariableAssignment
+;
+
+VariableDef:
+	'var' type=TYPE name=ID ';'
+;
+
+ConstDef:
+	'val' type=TYPE name=ID ';'
+;
+
+FunctionDef:
+	'def' type=TYPE name=ID ';'
+;
+
+VariableAssignment:
+//  The assignment operators are:
+//	-->	  = The expression is assigned to the target
+//	-->	 += The expression is added to the target
+//	-->	 -= The expression is subtracted from the target
+//	-->  *= The target is multiplied by the expression
+//	-->	 /= The target is divided by the expression
+//	-->	**= The target is assigned the target raised to the power of the expression
+	tgtvar=[VariableDef]
+	op=('=' | '+=' | '-=' | '*=' | '/=' | '**=' )
+	exp=Expression ';'
+;
+FunctionCall:
+	name=[FunctionDef]
+	('('
+ 		params+=Expression (':' params+=Expression)*
+ 	')')
+ 	';' 	
+;
+/* Expressions Precedence: 
+ * 	--> ()
+ * 	--> Built-in functions, user-defined functions
+ * 	--> unary +, unary -, NOT
+ * 	--> **
+ * 	--> *, /
+ * 	--> binary +, binary -
+ * 	--> =, <>, >, >=, <, <=
+ * 	--> AND
+ * 	--> OR
+ * 
+ ***/
+Expression: Or;
+Or returns Expression:
+	And (
+		{Or.left=current} 'OR'
+		right=And
+	)*;
+And returns Expression:
+	Comparison (
+		{And.left=current} 'AND'
+		right=Comparison
+	)*;
+Comparison returns Expression:
+	BinaryPlusOrMinus (
+		{Comparison.left=current} op=('=' | '<>' | '>=' | '<=' | '>' | '<')
+		right=BinaryPlusOrMinus
+	)*;
+BinaryPlusOrMinus returns Expression:
+	MulOrDiv (
+		({BinPlus.left=current} '+' | {BinMinus.left=current} '-')
+		right=MulOrDiv
+	)*;
+MulOrDiv returns Expression:
+	Exponent (
+		({MulOrDiv.left=current} op=('*' | '/'))
+		right=Exponent
+	)*;
+Exponent returns Expression:
+	UnaryPlusMinusOrNot (
+		{Exponent.left=current} '**'
+		right=UnaryPlusMinusOrNot
+	)?;
+UnaryPlusMinusOrNot returns Expression:
+	FunctionExp (
+	 ('+' {UnaPlus.left=current} | '-' {UnaMinus.left=current}) | ('NOT' {UnaNot.left=current})
+	right=FunctionExp
+	)*;
+FunctionExp returns Expression:
+	Primary (
+		({XFunctionCall.left=current} func=FunctionCall)
+		right=Primary
+	)?;
+Primary returns Expression:
+	'(' Expression ')' |
+	Atomic
+	;
+Atomic returns Expression:
+	varorval=[VariableOrConstDef]	|
+	{IntConstant} value=INT			|
+	{StringConstant} value=STRING	|
+	{BooleanConstant} value=BOOL
+	;
+
+VariableOrConstDef: VariableDef | ConstDef; 
+
+terminal TYPE:
+	'int' | 'char' | 'bool'
+;
+terminal BOOL:
+	'true' | 'false'
+;
