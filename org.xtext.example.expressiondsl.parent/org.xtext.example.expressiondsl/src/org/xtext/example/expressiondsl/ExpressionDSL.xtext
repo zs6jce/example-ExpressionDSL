@@ -9,8 +9,8 @@ Statement:
 	VariableDef	|
 	ConstDef	|
 	FunctionDef	|
-	FunctionCall
-//	VariableAssignment
+	FunctionCall|
+	VariableAssignment
 ;
 
 VariableDef:
