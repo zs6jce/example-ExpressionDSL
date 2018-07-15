@@ -26,5 +26,6 @@ Export-Package: org.xtext.example.expressiondsl,
  org.xtext.example.expressiondsl.scoping,
  org.xtext.example.expressiondsl.parser.antlr,
  org.xtext.example.expressiondsl.services,
- org.xtext.example.expressiondsl.expressionDSL
+ org.xtext.example.expressiondsl.expressionDSL,
+ org.xtext.example.expressiondsl.parser.antlr.lexer
 Import-Package: org.apache.log4j

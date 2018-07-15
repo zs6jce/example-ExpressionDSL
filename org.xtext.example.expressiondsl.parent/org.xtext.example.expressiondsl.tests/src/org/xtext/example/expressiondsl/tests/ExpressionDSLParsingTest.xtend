@@ -161,7 +161,7 @@ class ExpressionDSLParsingTest {
 			var int iB;
 			var int iC;
 			
-			var int testFunc;
+			def int testFunc;
 			
 			bA = ( iA  = 1 );  // Equals
 			bA = ( iA <> 1 );  // NOT Equals
@@ -216,7 +216,7 @@ class ExpressionDSLParsingTest {
 			var int iB;
 			var int iC;
 
-			var int testFunc;
+			def int testFunc;
 
 //ERROR - Type Miss match, can be flagged after parsing
 «««			bA = -( iA  = 1 );  // Equals

@@ -37,7 +37,7 @@ VariableAssignment:
 	op=('=' | '+=' | '-=' | '*=' | '/=' | '**=' )
 	exp=Expression ';'
 ;
-FunctionCall:
+FunctionCall returns Expression:
 	name=[FunctionDef]
 	('('
  		(params+=Expression (':' params+=Expression)*)?
@@ -93,10 +93,22 @@ UnaryPlusMinusOrNot returns Expression:
 	right=FunctionExp
 	)*;
 FunctionExp returns Expression:
+//	Primary (
+//		({XFunctionCall.left=current} func=FunctionCall)
+//		right=Primary
+//	)?;
+
+//	Primary (
+//		func=[FunctionDef]
+//		('('
+//	 		(params+=Expression (':' params+=Expression)*)?
+//	 	')')
+//	)?;
+
 	Primary (
-		({XFunctionCall.left=current} func=FunctionCall)
-		right=Primary
+		{XFunctionCall.left=current} func=FunctionCall
 	)?;
+
 Primary returns Expression:
 	'(' Expression ')' |
 	Atomic

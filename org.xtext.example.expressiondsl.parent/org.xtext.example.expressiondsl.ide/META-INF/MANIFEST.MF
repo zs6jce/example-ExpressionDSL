@@ -12,5 +12,6 @@ Require-Bundle: org.xtext.example.expressiondsl,
  org.antlr.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-10
 Export-Package: org.xtext.example.expressiondsl.ide.contentassist.antlr.internal,
- org.xtext.example.expressiondsl.ide.contentassist.antlr
+ org.xtext.example.expressiondsl.ide.contentassist.antlr,
+ org.xtext.example.expressiondsl.ide.contentassist.antlr.lexer
 

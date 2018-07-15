@@ -25,12 +25,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FunctionCall" eSuperTypes="#//Statement">
+  <eClassifiers xsi:type="ecore:EClass" name="Expression" eSuperTypes="#//Statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="name" eType="#//FunctionDef"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
         eType="#//Expression" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="varorval" eType="#//VariableOrConstDef"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VariableOrConstDef"/>
@@ -95,9 +93,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="XFunctionCall" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="func" eType="#//FunctionCall"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="func" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntConstant" eSuperTypes="#//Expression">

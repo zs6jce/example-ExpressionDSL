@@ -41,6 +41,12 @@ Workflow {
 			}
 			parserGenerator = {
 				debugGrammar = true
+				options = {
+					ignoreCase = true
+				}
+			}
+			scopeProvider = {
+				ignoreCase = true
 			}
 		}
 	}
