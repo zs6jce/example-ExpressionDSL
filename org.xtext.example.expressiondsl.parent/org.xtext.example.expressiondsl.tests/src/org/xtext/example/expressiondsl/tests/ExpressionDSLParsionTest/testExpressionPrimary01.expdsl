@@ -1,0 +1,16 @@
+			var bool bA;
+			var bool bB;
+			var bool bC;
+			
+//«««			bA = bB not bC; //ERROR
+//«««			bA = bB not;    //ERROR
+
+			bA = not bB;
+
+			bA = bA or not bB and not bC;
+			bA = not bA and not (bB and not bC);
+			bA = (not bA or not bB) and not bC;
+			
+			bA = not bB = bC;
+			bA = not (bB = bC);
+

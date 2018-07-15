@@ -1,0 +1,11 @@
+			var bool bA;
+			var char cA;
+			var int  iA;
+			
+			val bool vbA;
+			val char vcA;
+			var int  ciA;
+			
+			def bool funcBool;
+			def char funcChar;
+			def int  funcInt;

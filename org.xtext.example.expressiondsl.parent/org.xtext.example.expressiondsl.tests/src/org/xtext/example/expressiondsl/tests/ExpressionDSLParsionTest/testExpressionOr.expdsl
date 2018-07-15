@@ -1,0 +1,8 @@
+			var bool bA;
+			var bool bB;
+			var bool bC;
+			
+			bA = bB or bC;
+			bA = bA or bB or bC;
+			bA = bA or (bB or bC);
+			bA = (bA or bB) or bC;

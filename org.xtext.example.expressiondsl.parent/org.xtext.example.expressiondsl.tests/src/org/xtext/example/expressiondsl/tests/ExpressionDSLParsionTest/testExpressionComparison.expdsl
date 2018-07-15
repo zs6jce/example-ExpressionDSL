@@ -1,0 +1,31 @@
+			var bool bA;
+
+			var int iA;
+			var int iB;
+			var int iC;
+			
+			var int testFunc;
+			
+			bA = ( iA  = 1 );  // Equals
+			bA = ( iA <> 1 );  // NOT Equals
+			bA = ( iA >= 1 );  // Greater than or Equal
+			bA = ( iA <= 1 );  // Less    than or Equal
+			bA = ( iA >  1 );  // Greater than
+			bA = ( iA <  1 );  // Less    than
+
+			bA = ( iA  = iB);  // Equals
+			bA = ( iA <> iB);  // NOT Equals
+			bA = ( iA >= iB);  // Greater than or Equal
+			bA = ( iA <= iB);  // Less    than or Equal
+			bA = ( iA >  iB);  // Greater than
+			bA = ( iA <  iB);  // Less    than
+			
+			bA = ( iA  = testFunc() );  // Equals
+			bA = ( iA <> testFunc() );  // NOT Equals
+			bA = ( iA >= testFunc() );  // Greater than or Equal
+			bA = ( iA <= testFunc() );  // Less    than or Equal
+			bA = ( iA >  testFunc() );  // Greater than
+			bA = ( iA <  testFunc() );  // Less    than
+			
+			bA = iA = iA;
+			bA = (iA = iA);

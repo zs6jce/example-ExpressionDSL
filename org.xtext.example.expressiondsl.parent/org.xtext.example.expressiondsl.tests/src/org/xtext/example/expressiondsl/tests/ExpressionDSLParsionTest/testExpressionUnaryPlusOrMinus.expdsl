@@ -1,0 +1,41 @@
+			var bool bA;
+
+			var int iA;
+			var int iB;
+			var int iC;
+
+			var int testFunc;
+
+//ERROR - Type Miss match, can be flagged after parsing
+//«««			bA = -( iA  = 1 );  // Equals
+//«««			bA = -( iA <> 1 );  // NOT Equals
+//«««			bA = -( iA >= 1 );  // Greater than or Equal
+//«««			bA = -( iA <= 1 );  // Less    than or Equal
+//«««			bA = -( iA >  1 );  // Greater than
+//«««			bA = -( iA <  1 );  // Less    than
+//«««
+//«««			bA = +( iA  = 1 );  // Equals
+//«««			bA = +( iA <> 1 );  // NOT Equals
+//«««			bA = +( iA >= 1 );  // Greater than or Equal
+//«««			bA = +( iA <= 1 );  // Less    than or Equal
+//«««			bA = +( iA >  1 );  // Greater than
+//«««			bA = +( iA <  1 );  // Less    than
+
+			iA = -1;
+			iA = +1; // Should be flagged as Error, after parsing ?
+
+			iA = -1 + -2;
+			iA = +1 + +2; 
+
+			iA = -iB;
+			iA = +iB; // Should be flagged as Error, after parsing
+
+//«««			iA = + -iB; //ERROR
+//«««			iA = + +iB; //ERROR
+
+			iA = - testFunc();
+			iA = + testFunc(); // Should be flagged as Error, after parsing
+			iA = - testFunc( iA : iB : testFunc() );
+
+			iA = 1 + -testFunc();
+			iA = 1 + +testFunc();

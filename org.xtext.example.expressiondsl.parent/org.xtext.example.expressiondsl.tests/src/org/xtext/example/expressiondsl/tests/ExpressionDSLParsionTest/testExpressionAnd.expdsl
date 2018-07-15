@@ -1,0 +1,8 @@
+			var bool bA;
+			var bool bB;
+			var bool bC;
+			
+			bA = bB and bC;
+			bA = bA and bB and bC;
+			bA = bA and (bB and bC);
+			bA = (bA and bB) and bC;

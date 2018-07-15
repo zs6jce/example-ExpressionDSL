@@ -1,0 +1,13 @@
+			var bool bA;
+			var char cA;
+			var int  iA;
+			
+			bA = true;
+			bA = false;
+			
+			cA = 'String';
+			
+			iA = 11;
+			iA = 0;
+			iA = 01;
+

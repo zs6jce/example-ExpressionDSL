@@ -40,7 +40,7 @@ VariableAssignment:
 FunctionCall:
 	name=[FunctionDef]
 	('('
- 		params+=Expression (':' params+=Expression)*
+ 		(params+=Expression (':' params+=Expression)*)?
  	')')
  	';' 	
 ;

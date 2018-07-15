@@ -53,7 +53,7 @@ class ExpressionDSLParsingTest {
 		val result = parseHelper.parse('''
 			def char testFunc;
 			testFunc();
-		''')
+		''')	
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
@@ -66,7 +66,7 @@ class ExpressionDSLParsingTest {
 			var int iA;
 			var int iB;
 			var char cA;
-			def int testfuncNoParmsReturnsINT;
+			def int testFunc;
 
 			iA   = 1;
 			iA  += 1;
@@ -82,14 +82,14 @@ class ExpressionDSLParsingTest {
 			iA  /= iB;
 			iA **= iB;
 
-			cA = 'String'
+			cA = 'String';
 
-			iA   = testfuncNoParmsReturnsINT();
-			iA  += testfuncNoParmsReturnsINT();
-			iA  -= testfuncNoParmsReturnsINT();
-			iA  *= testfuncNoParmsReturnsINT();
-			iA  /= testfuncNoParmsReturnsINT();
-			iA **= testfuncNoParmsReturnsINT();
+			iA   = testFunc();
+			iA  += testFunc();
+			iA  -= testFunc();
+			iA  *= testFunc();
+			iA  /= testFunc();
+			iA **= testFunc();
 		''')
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -210,7 +210,7 @@ class ExpressionDSLParsingTest {
 	@Test
 	def void testExpressionUnaryPlusOrMinus() {
 		val result = parseHelper.parse('''
-			var bool bA:
+			var bool bA;
 
 			var int iA;
 			var int iB;

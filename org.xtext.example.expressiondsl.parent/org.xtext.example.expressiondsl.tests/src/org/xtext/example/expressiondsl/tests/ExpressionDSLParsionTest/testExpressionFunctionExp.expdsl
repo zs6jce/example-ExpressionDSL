@@ -1,0 +1,14 @@
+		var bool bA;
+		var char cA;
+		var int iA;
+		
+		def bool testFuncBool;
+		def char testFuncChar;
+		def int  testFuncInt;
+		
+		bA = testFuncBool(cA);
+		bA = NOT testFuncBool(cA);
+		
+		cA = testFuncChar();
+		
+		iA = testFuncChar('String' : 77 : (88 * 99))

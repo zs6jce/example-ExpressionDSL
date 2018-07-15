@@ -1,0 +1,28 @@
+		// Simple Assignments
+			var int iA;
+			var int iB;
+			var char cA;
+			def int testFunc;
+
+			iA   = 1;
+			iA  += 1;
+			iA  -= 1;
+			iA  *= 1;
+			iA  /= 1;
+			iA **= 1;
+
+			iA   = iB;
+			iA  += iB;
+			iA  -= iB;
+			iA  *= iB;
+			iA  /= iB;
+			iA **= iB;
+
+			cA = 'String';
+
+			iA   = testFunc();
+			iA  += testFunc();
+			iA  -= testFunc();
+			iA  *= testFunc();
+			iA  /= testFunc();
+			iA **= testFunc();
