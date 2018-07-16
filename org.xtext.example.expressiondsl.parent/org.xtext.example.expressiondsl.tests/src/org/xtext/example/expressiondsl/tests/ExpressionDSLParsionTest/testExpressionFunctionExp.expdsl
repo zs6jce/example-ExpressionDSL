@@ -11,4 +11,4 @@
 		
 		cA = testFuncChar();
 		
-		iA = testFuncChar('String' : 77 : (88 * 99))
+		iA = testFuncChar('String' : 77 : (88 * 99));

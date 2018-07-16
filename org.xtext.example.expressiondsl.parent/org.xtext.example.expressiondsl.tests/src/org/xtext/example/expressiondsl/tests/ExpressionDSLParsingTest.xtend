@@ -273,7 +273,7 @@ class ExpressionDSLParsingTest {
 		
 		cA = testFuncChar();
 		
-		iA = testFuncChar('String' : 77 : (88 * 99))
+		iA = testFuncChar('String' : 77 : (88 * 99));
 		''')
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors

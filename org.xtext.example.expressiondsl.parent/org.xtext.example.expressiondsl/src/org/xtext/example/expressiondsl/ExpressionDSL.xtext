@@ -9,7 +9,7 @@ Statement:
 	VariableDef	|
 	ConstDef	|
 	FunctionDef	|
-	FunctionCall|
+	FunctionCallStatement	|
 	VariableAssignment
 ;
 
@@ -37,13 +37,18 @@ VariableAssignment:
 	op=('=' | '+=' | '-=' | '*=' | '/=' | '**=' )
 	exp=Expression ';'
 ;
-FunctionCall returns Expression:
+FunctionCallStatement:
+	call=FunctionCall ";"
+;
+
+FunctionCall:
 	name=[FunctionDef]
 	('('
  		(params+=Expression (':' params+=Expression)*)?
  	')')
- 	';' 	
+ 		
 ;
+
 /* Expressions Precedence: 
  * 	--> ()
  * 	--> Built-in functions, user-defined functions
@@ -88,27 +93,14 @@ Exponent returns Expression:
 		right=UnaryPlusMinusOrNot
 	)?;
 UnaryPlusMinusOrNot returns Expression:
-	FunctionExp (
-	 ('+' {UnaPlus.left=current} | '-' {UnaMinus.left=current}) | ('NOT' {UnaNot.left=current})
-	right=FunctionExp
-	)*;
+	 (
+	 ({UnaryPlus}'+' right=FunctionExp | {UnaryMinus}'-'  right=FunctionExp) | ('NOT' right=FunctionExp)
+	
+	) | FunctionExp;
 FunctionExp returns Expression:
-//	Primary (
-//		({XFunctionCall.left=current} func=FunctionCall)
-//		right=Primary
-//	)?;
-
-//	Primary (
-//		func=[FunctionDef]
-//		('('
-//	 		(params+=Expression (':' params+=Expression)*)?
-//	 	')')
-//	)?;
-
-	Primary (
-		{XFunctionCall.left=current} func=FunctionCall
-	)?;
-
+	Primary | (
+		(func=FunctionCall)
+	);
 Primary returns Expression:
 	'(' Expression ')' |
 	Atomic
