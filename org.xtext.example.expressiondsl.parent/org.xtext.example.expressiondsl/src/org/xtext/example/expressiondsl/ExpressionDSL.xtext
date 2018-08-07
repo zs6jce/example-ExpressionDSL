@@ -3,12 +3,12 @@ grammar org.xtext.example.expressiondsl.ExpressionDSL with org.eclipse.xtext.com
 generate expressionDSL "http://www.xtext.org/example/expressiondsl/ExpressionDSL"
 
 Model:
-	statments+=Statement*;
+	statements+=Statement*;
 
 Statement:
-	VariableDef	|
-	ConstDef	|
-	FunctionDef	|
+	VariableDef				|
+	ConstDef				|
+	FunctionDef				|
 	FunctionCallStatement	|
 	VariableAssignment
 ;
@@ -24,7 +24,7 @@ ConstDef:
 FunctionDef:
 	'def' type=TYPE name=ID ';'
 ;
-
+ 
 VariableAssignment:
 //  The assignment operators are:
 //	-->	  = The expression is assigned to the target
@@ -49,6 +49,7 @@ FunctionCall:
  		
 ;
 
+//--------------------------------------------------------------------------
 /* Expressions Precedence: 
  * 	--> ()
  * 	--> Built-in functions, user-defined functions
@@ -79,7 +80,7 @@ Comparison returns Expression:
 	)*;
 BinaryPlusOrMinus returns Expression:
 	MulOrDiv (
-		({BinPlus.left=current} '+' | {BinMinus.left=current} '-')
+		({BinaryPlus.left=current} '+' | {BinaryMinus.left=current} '-')
 		right=MulOrDiv
 	)*;
 MulOrDiv returns Expression:
@@ -88,29 +89,34 @@ MulOrDiv returns Expression:
 		right=Exponent
 	)*;
 Exponent returns Expression:
+	//	http://blog.efftinge.de/2010/08/parsing-expressions-with-xtext.html
+	//	Right associativity is done using the following pattern (note the quantity operator and the call to the rule itself at the end)
+	// '*' - Left Associativity
+	// '?' - Right Associativity
 	UnaryPlusMinusOrNot (
 		{Exponent.left=current} '**'
-		right=UnaryPlusMinusOrNot
+		right=Exponent
 	)?;
 UnaryPlusMinusOrNot returns Expression:
-	 (
-	 ({UnaryPlus}'+' right=FunctionExp | {UnaryMinus}'-'  right=FunctionExp) | ('NOT' right=FunctionExp)
-	
-	) | FunctionExp;
+	FunctionExp	|
+	( ({UnaryPlus} '+' | {UnaryMinus} '-' | {Not} 'NOT') expr=UnaryPlusMinusOrNot )
+	;
 FunctionExp returns Expression:
-	Primary | (
-		(func=FunctionCall)
-	);
+	{FunctionExp} func=FunctionCall |
+	Primary
+	;
 Primary returns Expression:
 	'(' Expression ')' |
 	Atomic
 	;
 Atomic returns Expression:
-	varorval=[VariableOrConstDef]	|
+	{VariableOrConstRef} value=[VariableOrConstDef]	|
 	{IntConstant} value=INT			|
 	{StringConstant} value=STRING	|
 	{BooleanConstant} value=BOOL
 	;
+//--------------------------------------------------------------------------
+
 
 VariableOrConstDef: VariableDef | ConstDef; 
 
