@@ -34,14 +34,38 @@ class ExpressionDSLParsingTest {
 			var bool bA;
 			var char cA;
 			var int  iA;
-			
+
 			val bool vbA;
 			val char vcA;
 			var int  ciA;
-			
+
 			def bool funcBool;
 			def char funcChar;
 			def int  funcInt;
+
+			// Data Structures
+			struct sA;
+			endstruct;
+
+			struct sB;
+				subf char sfcA;
+				subf int  sfiA dim(99);
+			endstruct;
+
+			struct sC dim(99);
+				     char sfcA;
+				subf int  sfiA dim(99);
+			endstruct;
+
+			// Arrays
+			var bool bA dim(10);
+			var char cA dim(20);
+			var int  iA dim(30);
+
+			val bool vbA dim(100);
+			val char vcA dim(200);
+			var int  ciA dim(300);
+
 		''')
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -328,9 +352,61 @@ class ExpressionDSLParsingTest {
 	}
 
 	@Test
-	def void testExpressionPrecedence() {
-		//TODO
+	def void testExpressionArray01() {
+		val result = parseHelper.parse('''
+			var int  iA dim(10);
+			var int  iB dim(20);
+
+			iA(1) = 11;
+			iA(2) = 0;
+			iA(iA) = 01;
+			iA(iB) = 01;
+		''')
+		Assert.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 	}
+
+	@Test
+	def void testExpressionArray02() {
+		val result = parseHelper.parse('''
+			var int iA;
+
+			struct sA dim(10);
+				char sfA dim(20);
+			endstruct;
+
+			sA(1).sfA(2) = iA;
+
+			iA = sA(3).sfA(iA);
+		''')
+		Assert.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+	}
+
+	@Test
+	def void testExpressionArray03() {
+		val result = parseHelper.parse('''
+			var int iA;
+
+			struct sA dim(10);
+				char sfA dim(20);
+			endstruct;
+
+			def char testFunc;
+
+			sA(1).sfA(2) = iA;
+
+			iA = sA(3).sfA(iA);
+
+			iA = sA(testFunc(iA)).sfA(iA);
+		''')
+		Assert.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+	}
+	
 }
 
 //  i = 1 + NOT + 1; //ERROR -> NOT is reserved word, not allowed to be used as Varible Name

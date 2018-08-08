@@ -8,17 +8,32 @@ Model:
 Statement:
 	VariableDef				|
 	ConstDef				|
+	StructDef				|
 	FunctionDef				|
 	FunctionCallStatement	|
 	VariableAssignment
 ;
 
 VariableDef:
-	'var' type=TYPE name=ID ';'
+	'var' type=TYPE name=ID (options=Dim)? ';'
 ;
 
 ConstDef:
-	'val' type=TYPE name=ID ';'
+	'val' type=TYPE name=ID (options=Dim)? ';'
+;
+
+StructDef:
+	'struct' name=ID (options=Dim)? ';'
+	subFields+=(StructSubFields)*
+	'endstruct' ';'
+;
+
+SubField:
+	('subf')? type=TYPE name=ID (options=Dim)? ';' 
+;
+
+StructSubFields:
+	SubField | StructDef
 ;
 
 FunctionDef:
@@ -42,11 +57,14 @@ FunctionCallStatement:
 ;
 
 FunctionCall:
-	name=[FunctionDef]
+	ref=[FunctionDef]
 	('('
  		(params+=Expression (':' params+=Expression)*)?
  	')')
- 		
+;
+
+ArrayExp:
+	ref=[VariableOrConstDef] '(' index=Expression ')'
 ;
 
 //--------------------------------------------------------------------------
@@ -102,23 +120,28 @@ UnaryPlusMinusOrNot returns Expression:
 	( ({UnaryPlus} '+' | {UnaryMinus} '-' | {Not} 'NOT') expr=UnaryPlusMinusOrNot )
 	;
 FunctionExp returns Expression:
-	{FunctionExp} func=FunctionCall |
+	FunctionCall |
+//	ArrayExp	 |
 	Primary
 	;
 Primary returns Expression:
-	'(' Expression ')' |
+	'(' Expression ')'	|
+//	ArrayExp			|
 	Atomic
 	;
 Atomic returns Expression:
-	{VariableOrConstRef} value=[VariableOrConstDef]	|
+	{VariableOrConstRef} ref=[VariableOrConstDef]	|
 	{IntConstant} value=INT			|
 	{StringConstant} value=STRING	|
 	{BooleanConstant} value=BOOL
 	;
 //--------------------------------------------------------------------------
-
-
 VariableOrConstDef: VariableDef | ConstDef; 
+
+Dim:
+//Dimensions of Array (as in how many elements)
+	'DIM' '(' dim=INT ')'
+;
 
 terminal TYPE:
 	'int' | 'char' | 'bool'
