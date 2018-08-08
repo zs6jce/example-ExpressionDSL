@@ -63,10 +63,10 @@ FunctionCall:
  	')')
 ;
 
-ArrayExp:
-	ref=[VariableOrConstDef] '(' index=Expression ')'
+VarOrArrayExp returns Expression:
+	({VarExp}	ref=[VariableOrConstRef]) | 
+	({ArrayExp}	ref=[VariableOrConstRef] '(' index=Expression ')')
 ;
-
 //--------------------------------------------------------------------------
 /* Expressions Precedence: 
  * 	--> ()
@@ -121,22 +121,25 @@ UnaryPlusMinusOrNot returns Expression:
 	;
 FunctionExp returns Expression:
 	FunctionCall |
-//	ArrayExp	 |
 	Primary
 	;
 Primary returns Expression:
 	'(' Expression ')'	|
-//	ArrayExp			|
+	VarOrArrayExp		| // <<<< Issue is Here?
 	Atomic
 	;
 Atomic returns Expression:
-	{VariableOrConstRef} ref=[VariableOrConstDef]	|
 	{IntConstant} value=INT			|
 	{StringConstant} value=STRING	|
 	{BooleanConstant} value=BOOL
 	;
 //--------------------------------------------------------------------------
-VariableOrConstDef: VariableDef | ConstDef; 
+VariableOrConstRef:
+	VariableDef	|
+	ConstDef	|
+	StructDef	|
+	StructSubFields
+;
 
 Dim:
 //Dimensions of Array (as in how many elements)
