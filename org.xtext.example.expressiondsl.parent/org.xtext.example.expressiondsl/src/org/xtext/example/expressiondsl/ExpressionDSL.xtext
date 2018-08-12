@@ -15,29 +15,29 @@ Statement:
 ;
 
 VariableDef:
-	'var' type=TYPE name=ID (options=Dim)? ';'
+	'var' type=TYPE name=ValidID (options=Dim)? ';'
 ;
 
 ConstDef:
-	'val' type=TYPE name=ID (options=Dim)? ';'
+	'val' type=TYPE name=ValidID (options=Dim)? ';'
 ;
 
 StructDef:
-	'struct' name=ID (options=Dim)? ';'
-	subFields+=(StructSubFields)*
+	'struct' name=ValidID (options=Dim)? ';'
+	subFields+=(SubField)*
 	'endstruct' ';'
 ;
 
-SubField:
-	('subf')? type=TYPE name=ID (options=Dim)? ';' 
+SubFieldDef:
+	('subf')? type=TYPE name=ValidID (options=Dim)? ';' 
 ;
 
-StructSubFields:
-	SubField | StructDef
+SubField:
+	SubFieldDef | StructDef
 ;
 
 FunctionDef:
-	'def' type=TYPE name=ID ';'
+	'def' type=TYPE name=ValidID ';'
 ;
  
 VariableAssignment:
@@ -53,19 +53,47 @@ VariableAssignment:
 	exp=Expression ';'
 ;
 FunctionCallStatement:
-	call=FunctionCall ";"
+	'call'? call=FunctionCall ";"
 ;
 
 FunctionCall:
-	ref=[FunctionDef]
+	=> ref=[FunctionDef]
 	('('
  		(params+=Expression (':' params+=Expression)*)?
  	')')
 ;
 
-VarOrArrayExp returns Expression:
-	({VarExp}	ref=[VariableOrConstRef]) | 
-	({ArrayExp}	ref=[VariableOrConstRef] '(' index=Expression ')')
+// ArrayExpOption1
+//ArrayExp returns Expression:
+//	Primary (
+//		=> ( {ArrayExp.left=current} '(' arrayDimensions=Expression ')' )
+//	)?
+//;
+
+//ArrayExpOption2
+//ArrayExp:
+//	=> ref=[Variable] '(' index=Expression ')'
+//;
+
+//ArrayExpOption3
+//	https://www.eclipse.org/forums/index.php/t/503752/
+ArrayExp:
+	VariableArray	|
+	StructArray		|
+	SubFieldArray
+;
+VariableArray returns ArrayExp:
+	{VariableArray} => ref=[VariableDef] '(' arrayDimensions=Expression ')'
+;
+StructArray returns ArrayExp:
+	{StructArray} => ref=[StructDef] '(' arrayDimensions=Expression ')'
+;
+SubFieldArray returns ArrayExp:
+	{SubFieldArray} => ref=[SubFieldDef] '(' arrayDimensions=Expression ')'
+;
+
+DotExpression returns Ref:
+	=> StructArray ({DotExpression.ref=current}  "." (tail=[SubFieldArray] | tail=[StructArray]) )*
 ;
 //--------------------------------------------------------------------------
 /* Expressions Precedence: 
@@ -79,6 +107,11 @@ VarOrArrayExp returns Expression:
  * 	--> AND
  * 	--> OR
  * 
+ *  https://www.eclipse.org/Xtext/documentation/307_special_languages.html#expressions
+ *  IntroductionToExpressionLanguagesWithXtext
+ *  	PDF - https://www.eclipsecon.org/france2017/sites/default/files/slides/IntroductionToExpressionLanguagesWithXtext.pdf
+ * 		Vid - https://www.youtube.com/watch?v=fnPxkWqo_R8
+ *	https://www.eclipse.org/forums/index.php/t/503752/
  ***/
 Expression: Or;
 Or returns Expression:
@@ -91,7 +124,7 @@ And returns Expression:
 		{And.left=current} 'AND'
 		right=Comparison
 	)*;
-Comparison returns Expression:
+Comparison returns Expression: // Relational
 	BinaryPlusOrMinus (
 		{Comparison.left=current} op=('=' | '<>' | '>=' | '<=' | '>' | '<')
 		right=BinaryPlusOrMinus
@@ -107,6 +140,7 @@ MulOrDiv returns Expression:
 		right=Exponent
 	)*;
 Exponent returns Expression:
+	//  https://www.eclipse.org/Xtext/documentation/307_special_languages.html#expressions
 	//	http://blog.efftinge.de/2010/08/parsing-expressions-with-xtext.html
 	//	Right associativity is done using the following pattern (note the quantity operator and the call to the rule itself at the end)
 	// '*' - Left Associativity
@@ -116,16 +150,21 @@ Exponent returns Expression:
 		right=Exponent
 	)?;
 UnaryPlusMinusOrNot returns Expression:
+	// https://dslmeinte.wordpress.com/2011/03/21/pre-and-postfix-operators-in-xtext/
+	// https://dslmeinte.wordpress.com/2011/03/24/more-on-pre-and-postfix-operators-in-xtext/
 	FunctionExp	|
 	( ({UnaryPlus} '+' | {UnaryMinus} '-' | {Not} 'NOT') expr=UnaryPlusMinusOrNot )
 	;
 FunctionExp returns Expression:
-	FunctionCall |
+//	ArrayExp	|
+	FunctionCall|
 	Primary
 	;
 Primary returns Expression:
+	DotExpression		|
+	ArrayExp			|
+//	QualifiedName		|
 	'(' Expression ')'	|
-	VarOrArrayExp		| // <<<< Issue is Here?
 	Atomic
 	;
 Atomic returns Expression:
@@ -138,13 +177,39 @@ VariableOrConstRef:
 	VariableDef	|
 	ConstDef	|
 	StructDef	|
-	StructSubFields
+	SubField
 ;
+
+Variable:
+	VariableDef	|
+	StructDef	|
+	SubField
+;
+
 
 Dim:
 //Dimensions of Array (as in how many elements)
-	'DIM' '(' dim=INT ')'
+	'DIM' '(' arrayDimensions=INT ')'
 ;
+
+//--------------------------------------------------------------------------
+// Helper 
+// https://dslmeinte.wordpress.com/2014/09/11/ambiguitiy-in-xtext-grammars-part-2/
+Named: 
+	VariableDef	|
+	ConstDef	|
+	StructDef	|
+	SubFieldDef	|
+	FunctionDef
+;
+
+ValidID:
+	ID
+;
+
+//QualifiedName:
+//	ArrayExp ({ArrayExp.left=current} '.' tail=ArrayExp)*
+//;
 
 terminal TYPE:
 	'int' | 'char' | 'bool'

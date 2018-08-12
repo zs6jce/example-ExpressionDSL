@@ -11,6 +11,13 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.xtext.example.expressiondsl.expressionDSL.Model
+import org.xtext.example.expressiondsl.expressionDSL.FunctionCallStatement
+import org.xtext.example.expressiondsl.expressionDSL.Expression
+import org.xtext.example.expressiondsl.expressionDSL.IntConstant
+
+import static extension org.junit.Assert.*
+import org.xtext.example.expressiondsl.expressionDSL.FunctionDef
+import org.xtext.example.expressiondsl.expressionDSL.VariableAssignment
 
 @RunWith(XtextRunner)
 @InjectWith(ExpressionDSLInjectorProvider)
@@ -76,13 +83,48 @@ class ExpressionDSLParsingTest {
 	def void testFuncationCall01() {
 		val result = parseHelper.parse('''
 			def char testFunc;
-			testFunc();
+			call testFunc();
 		''')	
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var call = (result.statements.last as FunctionCallStatement).call
+
+		// Function Name
+		var ref = call.ref
+		var funcName = ref.name
+		assertEquals('testFunc', funcName)
+		var funcType = ref.type
+		assertEquals('char', funcType)
 	}
-	
+
+	@Test
+	def void testFuncationCall03() {
+		val result = parseHelper.parse('''
+			def char testFunc;
+			call testFunc(1:2);
+		''')	
+		Assert.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var call = (result.statements.last as FunctionCallStatement).call
+
+		// Parameters
+		var parm1 = call.params.head as IntConstant
+		assertEquals('1', parm1.value.toString)
+		var parm2 = call.params.last as IntConstant
+		assertEquals('2', parm2.value.toString)
+		
+		// Function Name
+		var ref = call.ref
+		var funcName = ref.name
+		assertEquals('testFunc', funcName)
+		var funcType = ref.type
+		assertEquals('char', funcType)
+	}
+
 	@Test
 	def void testAssignment01() {
 		val result = parseHelper.parse('''
@@ -406,7 +448,80 @@ class ExpressionDSLParsingTest {
 		val errors = result.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 	}
-	
+
+	@Test
+	def void testExpressionArray04() {
+		val result = parseHelper.parse('''
+			var int iA;
+			var int iB dim(10);
+
+			iA = iB(5);
+		''')
+		Assert.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var array = (result.statements.last as VariableAssignment).exp
+
+//		// Function Name
+//		var ref = call.ref
+//		var funcName = ref.name
+//		assertEquals('testFunc', funcName)
+//		var funcType = ref.type
+//		assertEquals('char', funcType)
+	}
+
+	@Test
+	def void testExpressionArray05() {
+		val result = parseHelper.parse('''
+			var int intA;
+			var int intB dim(10);
+			
+			struct structA;
+				subf int subfA;
+			endstruct;
+
+			struct structB dim(10);
+				subf int subfB;
+			endstruct;
+
+			struct structC dim(10);
+				subf int subfC dim(20);
+				struct subStructC dim(30);
+					subf int subSubfC dim(40);
+				endstruct;
+			endstruct;
+
+			def char funcTest;
+
+			// Normal Assignment
+			intA = intB;
+
+			// Assign result of function
+			intA = funcTest();
+			intA = funcTest(1); 
+			intA = funcTest(2:3);
+
+			// Arrays
+			intA = intB(4);
+			intA = intB(funcTest(5));
+
+			// Qualified
+			intA = structA;
+			intA = structA.subfA;
+
+			intA = structB(5);
+			intA = structB(testFunc());
+			
+			intA = structB(6).subfB;
+
+			intA = stuctC(7).subfC(8);
+			intA = structC(9).subStructC(10).subSubf(11);
+		''')
+		Assert.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+	}
 }
 
 //  i = 1 + NOT + 1; //ERROR -> NOT is reserved word, not allowed to be used as Varible Name
