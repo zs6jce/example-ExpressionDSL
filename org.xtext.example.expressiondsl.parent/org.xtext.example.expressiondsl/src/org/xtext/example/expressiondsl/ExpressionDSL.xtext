@@ -39,7 +39,7 @@ SubField:
 FunctionDef:
 	'def' type=TYPE name=ValidID ';'
 ;
- 
+
 VariableAssignment:
 //  The assignment operators are:
 //	-->	  = The expression is assigned to the target
@@ -52,6 +52,7 @@ VariableAssignment:
 	op=('=' | '+=' | '-=' | '*=' | '/=' | '**=' )
 	exp=Expression ';'
 ;
+
 FunctionCallStatement:
 	'call'? call=FunctionCall ";"
 ;
@@ -77,24 +78,49 @@ FunctionCall:
 
 //ArrayExpOption3
 //	https://www.eclipse.org/forums/index.php/t/503752/
-ArrayExp:
-	VariableArray	|
-	StructArray		|
-	SubFieldArray
+//ArrayExp:
+//	VariableArray	|
+//	StructArray		|
+//	SubFieldArray
+//;
+//VariableArray returns ArrayExp:
+//	{VariableArray} => ref=[VariableDef] '(' arrayDimensions=Expression ')'
+//;
+//StructArray returns ArrayExp:
+//	{StructArray} => ref=[StructDef] '(' arrayDimensions=Expression ')'
+//;
+//SubFieldArray returns ArrayExp:
+//	{SubFieldArray} => ref=[SubFieldDef] '(' arrayDimensions=Expression ')'
+//;
+
+//ArrayExpOption4:
+//ArrayExp:
+//	ref=[Variable|ValidID]
+//	'(' arrayDimensions=Expression ')'
+//;
+
+//ArrayExpOption5:
+ParmSEP:
+	':'
 ;
-VariableArray returns ArrayExp:
-	{VariableArray} => ref=[VariableDef] '(' arrayDimensions=Expression ')'
+QualSEP:
+	'.'
 ;
-StructArray returns ArrayExp:
-	{StructArray} => ref=[StructDef] '(' arrayDimensions=Expression ')'
+VariableOrArrayOrFunc:
+	ref=[Named|ValidID]
+	( '(' //Optional '()'
+		(  //Optional Parameter '(params)'
+			params+=Expression (ParmSEP params+=Expression)* //One or More optional Parameters '(params1:params2)'
+		)?
+	')')?
 ;
-SubFieldArray returns ArrayExp:
-	{SubFieldArray} => ref=[SubFieldDef] '(' arrayDimensions=Expression ')'
+QualifiedRef:
+	VariableOrArrayOrFunc ({QualifiedRefX.head=current} QualSEP tail=VariableOrArrayOrFunc)*
 ;
 
-DotExpression returns Ref:
-	=> StructArray ({DotExpression.ref=current}  "." (tail=[SubFieldArray] | tail=[StructArray]) )*
-;
+//DotExpression returns Ref:
+//	StructArray ({DotExpression.ref=current}  "." (tail=[SubFieldArray] | tail=[StructArray]) )*
+//;
 //--------------------------------------------------------------------------
 /* Expressions Precedence: 
  * 	--> ()
@@ -157,12 +183,14 @@ UnaryPlusMinusOrNot returns Expression:
 	;
 FunctionExp returns Expression:
 //	ArrayExp	|
-	FunctionCall|
+//  FunctionCall
+	QualifiedRef |
 	Primary
 	;
 Primary returns Expression:
-	DotExpression		|
-	ArrayExp			|
+//	DotExpression		|
+//	ArrayExp			|
+//	VariableRef			|
 //	QualifiedName		|
 	'(' Expression ')'	|
 	Atomic
@@ -173,18 +201,18 @@ Atomic returns Expression:
 	{BooleanConstant} value=BOOL
 	;
 //--------------------------------------------------------------------------
-VariableOrConstRef:
-	VariableDef	|
-	ConstDef	|
-	StructDef	|
-	SubField
-;
+//VariableOrConstRef:
+//	VariableDef	|
+//	ConstDef	|
+//	StructDef	|
+//	SubField
+//;
 
-Variable:
-	VariableDef	|
-	StructDef	|
-	SubField
-;
+//Variable:
+//	VariableDef	|
+//	StructDef	|
+//	SubField
+//;
 
 
 Dim:
