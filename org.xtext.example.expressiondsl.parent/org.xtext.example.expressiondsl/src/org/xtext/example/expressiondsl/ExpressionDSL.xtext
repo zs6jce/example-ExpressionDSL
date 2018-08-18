@@ -23,8 +23,8 @@ ConstDef:
 ;
 
 StructDef:
-	'struct' name=ValidID (options=Dim)? ';'
-	subFields+=(SubField)*
+	'struct' name=ValidID (options=Dim)? 'qualified'? ';'
+	( => subFields+=SubField* ) //<<<<<<<<<< ERROR HERE!!!!!!!!!!
 	'endstruct' ';'
 ;
 
@@ -32,8 +32,9 @@ SubFieldDef:
 	('subf')? type=TYPE name=ValidID (options=Dim)? ';' 
 ;
 
-SubField:
-	SubFieldDef | StructDef
+SubField: //<<<<<<<<<< ERROR HERE!!!!!!!!!!
+	SubFieldDef |
+	StructDef
 ;
 
 FunctionDef:
@@ -59,9 +60,7 @@ FunctionCallStatement:
 
 FunctionCall:
 	=> ref=[FunctionDef]
-	('('
- 		(params+=Expression (':' params+=Expression)*)?
- 	')')
+	(OPEN_PAREN (params+=Expression (':' params+=Expression)*)? CLOSE_PAREN)
 ;
 
 // ArrayExpOption1
@@ -100,27 +99,15 @@ FunctionCall:
 //;
 
 //ArrayExpOption5:
-ParmSEP:
-	':'
-;
-QualSEP:
-	'.'
-;
 VariableOrArrayOrFunc:
 	ref=[Named|ValidID]
-	( '(' //Optional '()'
+	(OPEN_PAREN //Optional '()'
 		(  //Optional Parameter '(params)'
 			params+=Expression (ParmSEP params+=Expression)* //One or More optional Parameters '(params1:params2)'
 		)?
-	')')?
-;
-QualifiedRef:
-	VariableOrArrayOrFunc ({QualifiedRefX.head=current} QualSEP tail=VariableOrArrayOrFunc)*
+	CLOSE_PAREN)?
 ;
 
-//DotExpression returns Ref:
-//	StructArray ({DotExpression.ref=current}  "." (tail=[SubFieldArray] | tail=[StructArray]) )*
-//;
 //--------------------------------------------------------------------------
 /* Expressions Precedence: 
  * 	--> ()
@@ -178,21 +165,21 @@ Exponent returns Expression:
 UnaryPlusMinusOrNot returns Expression:
 	// https://dslmeinte.wordpress.com/2011/03/21/pre-and-postfix-operators-in-xtext/
 	// https://dslmeinte.wordpress.com/2011/03/24/more-on-pre-and-postfix-operators-in-xtext/
-	FunctionExp	|
+	QualifiedRef	|
 	( ({UnaryPlus} '+' | {UnaryMinus} '-' | {Not} 'NOT') expr=UnaryPlusMinusOrNot )
 	;
-FunctionExp returns Expression:
-//	ArrayExp	|
-//  FunctionCall
-	QualifiedRef |
-	Primary
-	;
+QualifiedRef returns Expression:
+	Primary	|	
+	VariableOrArrayOrFunc ({QualifiedRef.head=current} QualSEP tail=VariableOrArrayOrFunc)*
+
+//	Primary(
+//		{Qualified.left=current} (QualSEPx?='.')? tail=Primary
+//	)*
+
+;
+
 Primary returns Expression:
-//	DotExpression		|
-//	ArrayExp			|
-//	VariableRef			|
-//	QualifiedName		|
-	'(' Expression ')'	|
+	OPEN_PAREN Expression CLOSE_PAREN	|
 	Atomic
 	;
 Atomic returns Expression:
@@ -217,7 +204,7 @@ Atomic returns Expression:
 
 Dim:
 //Dimensions of Array (as in how many elements)
-	'DIM' '(' arrayDimensions=INT ')'
+	'DIM' OPEN_PAREN arrayDimensions=INT CLOSE_PAREN
 ;
 
 //--------------------------------------------------------------------------
@@ -228,17 +215,29 @@ Named:
 	ConstDef	|
 	StructDef	|
 	SubFieldDef	|
-	FunctionDef
+	FunctionDef	|
+	SubField
 ;
 
 ValidID:
 	ID
 ;
 
+ParmSEP:
+	':'
+;
+QualSEP:
+	'.'
+;
 //QualifiedName:
 //	ArrayExp ({ArrayExp.left=current} '.' tail=ArrayExp)*
 //;
-
+terminal OPEN_PAREN:
+	'('
+;
+terminal CLOSE_PAREN:
+	')'
+;
 terminal TYPE:
 	'int' | 'char' | 'bool'
 ;
