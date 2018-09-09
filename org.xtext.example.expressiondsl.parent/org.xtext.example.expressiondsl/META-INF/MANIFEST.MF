@@ -11,10 +11,10 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.equinox.common;bundle-version="3.5.0",
  org.eclipse.emf.ecore,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
- org.antlr.runtime,
  org.eclipse.xtext.util,
  org.eclipse.emf.common,
- org.eclipse.xtend.lib;bundle-version="2.14.0"
+ org.eclipse.xtend.lib;bundle-version="2.14.0",
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
 Bundle-RequiredExecutionEnvironment: JavaSE-10
 Export-Package: org.xtext.example.expressiondsl,
  org.xtext.example.expressiondsl.serializer,
@@ -22,10 +22,10 @@ Export-Package: org.xtext.example.expressiondsl,
  org.xtext.example.expressiondsl.validation,
  org.xtext.example.expressiondsl.expressionDSL.impl,
  org.xtext.example.expressiondsl.expressionDSL.util,
+ org.xtext.example.expressiondsl.parser.antlr.lexer,
  org.xtext.example.expressiondsl.generator,
  org.xtext.example.expressiondsl.scoping,
  org.xtext.example.expressiondsl.parser.antlr,
  org.xtext.example.expressiondsl.services,
- org.xtext.example.expressiondsl.expressionDSL,
- org.xtext.example.expressiondsl.parser.antlr.lexer
+ org.xtext.example.expressiondsl.expressionDSL
 Import-Package: org.apache.log4j

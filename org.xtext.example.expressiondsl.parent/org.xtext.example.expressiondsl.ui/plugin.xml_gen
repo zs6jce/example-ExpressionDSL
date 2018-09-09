@@ -249,15 +249,6 @@
 		<super type="org.eclipse.xtext.ui.check.expensive"/>
 		<persistent value="true"/>
 	</extension>
-	<extension point="org.eclipse.ui.preferencePages">
-		<page
-			category="org.xtext.example.expressiondsl.ExpressionDSL"
-			class="org.xtext.example.expressiondsl.ui.ExpressionDSLExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
-			id="org.xtext.example.expressiondsl.ExpressionDSL.validator.preferencePage"
-			name="Errors/Warnings">
-			<keywordReference id="org.xtext.example.expressiondsl.ui.keyword_ExpressionDSL"/>
-		</page>
-	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.xtext.example.expressiondsl.ui.ExpressionDSLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"

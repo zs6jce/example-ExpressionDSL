@@ -99,7 +99,8 @@ FunctionCall:
 //;
 
 //ArrayExpOption5:
-VariableOrArrayOrFunc:
+VariableOrArrayOrFunc returns Expression:
+	{VariableOrArrayOrFunc}
 	ref=[Named|ValidID]
 	(OPEN_PAREN //Optional '()'
 		(  //Optional Parameter '(params)'
@@ -171,11 +172,6 @@ UnaryPlusMinusOrNot returns Expression:
 QualifiedRef returns Expression:
 	Primary	|	
 	VariableOrArrayOrFunc ({QualifiedRef.head=current} QualSEP tail=VariableOrArrayOrFunc)*
-
-//	Primary(
-//		{Qualified.left=current} (QualSEPx?='.')? tail=Primary
-//	)*
-
 ;
 
 Primary returns Expression:
@@ -215,8 +211,12 @@ Named:
 	ConstDef	|
 	StructDef	|
 	SubFieldDef	|
-	FunctionDef	|
-	SubField
+	FunctionDef
+//	|
+//	SubField
+;
+Name returns Named:
+	name=ValidID
 ;
 
 ValidID:
