@@ -26,12 +26,14 @@ import org.xtext.example.expressiondsl.expressionDSL.Comparison
 import org.xtext.example.expressiondsl.expressionDSL.UnaryPlus
 import org.xtext.example.expressiondsl.expressionDSL.UnaryMinus
 import org.xtext.example.expressiondsl.expressionDSL.Not
-import org.xtext.example.expressiondsl.expressionDSL.FunctionExp
-import org.xtext.example.expressiondsl.expressionDSL.FunctionDef
-import org.xtext.example.expressiondsl.expressionDSL.VariableOrConstDef
 import org.xtext.example.expressiondsl.expressionDSL.VariableDef
 import org.xtext.example.expressiondsl.expressionDSL.ConstDef
-import org.xtext.example.expressiondsl.expressionDSL.VariableOrConstRef
+import org.xtext.example.expressiondsl.expressionDSL.VariableOrArrayOrFunc
+import org.xtext.example.expressiondsl.expressionDSL.StructDef
+import org.xtext.example.expressiondsl.expressionDSL.SubFieldDef
+import org.xtext.example.expressiondsl.expressionDSL.FunctionDef
+
+import org.xtext.example.expressiondsl.tests.TestUtils
 
 @ExtendWith(InjectionExtension)
 @InjectWith(ExpressionDSLInjectorProvider)
@@ -154,41 +156,10 @@ class ExpressionDSLPrecedenceTest {
 						TstVar01 = «input»
 		'''.parse
 		var stmt = result.statements.last as VariableAssignment
-		var actual = stringRepr(stmt.exp)
+		var actual = TestUtils.stringRepr(stmt.exp)
 		assertEquals(expected, actual)
 	}
 
-	def private String stringRepr(Expression e) {
-		switch (e) {
 
-			And	: '''(«e.left.stringRepr» AND «e.right.stringRepr»)'''
-			Or	: '''(«e.left.stringRepr» OR «e.right.stringRepr»)'''
 
-			Comparison: '''(«e.left.stringRepr» «e.op» «e.right.stringRepr»)'''
-
-			BinaryPlus: '''(«e.left.stringRepr» + «e.right.stringRepr»)'''
-			BinaryMinus: '''(«e.left.stringRepr» - «e.right.stringRepr»)'''
-
-			MulOrDiv: '''(«e.left.stringRepr» «e.op» «e.right.stringRepr»)'''
-
-			Exponent: '''(«e.left.stringRepr» ** «e.right.stringRepr»)'''
-
-			FunctionExp : '''«e.func.name.name»(«FOR param: e.func.params SEPARATOR ':'»«param.stringRepr»«ENDFOR»)'''
-
-			UnaryPlus: '''( +«e.expr.stringRepr»)'''
-			UnaryMinus: '''( -«e.expr.stringRepr»)'''			
-			Not: '''(NOT «e.expr.stringRepr»)'''
-
-			VariableOrConstRef: '''«e.value.stringRepr»'''
-			IntConstant: '''«e.value»'''
-			BooleanConstant: '''«e.value»'''
-		}.toString
-	}
-
-	def private String stringRepr(VariableOrConstDef e) {
-		switch (e) {
-			VariableDef: e.name
-			ConstDef: e.name
-		}
-	}
 }
