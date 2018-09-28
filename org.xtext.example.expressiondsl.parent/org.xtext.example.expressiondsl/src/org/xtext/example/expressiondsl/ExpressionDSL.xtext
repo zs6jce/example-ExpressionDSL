@@ -63,42 +63,6 @@ FunctionCall:
 	(OPEN_PAREN (params+=Expression (':' params+=Expression)*)? CLOSE_PAREN)
 ;
 
-// ArrayExpOption1
-//ArrayExp returns Expression:
-//	Primary (
-//		=> ( {ArrayExp.left=current} '(' arrayDimensions=Expression ')' )
-//	)?
-//;
-
-//ArrayExpOption2
-//ArrayExp:
-//	=> ref=[Variable] '(' index=Expression ')'
-//;
-
-//ArrayExpOption3
-//	https://www.eclipse.org/forums/index.php/t/503752/
-//ArrayExp:
-//	VariableArray	|
-//	StructArray		|
-//	SubFieldArray
-//;
-//VariableArray returns ArrayExp:
-//	{VariableArray} => ref=[VariableDef] '(' arrayDimensions=Expression ')'
-//;
-//StructArray returns ArrayExp:
-//	{StructArray} => ref=[StructDef] '(' arrayDimensions=Expression ')'
-//;
-//SubFieldArray returns ArrayExp:
-//	{SubFieldArray} => ref=[SubFieldDef] '(' arrayDimensions=Expression ')'
-//;
-
-//ArrayExpOption4:
-//ArrayExp:
-//	ref=[Variable|ValidID]
-//	'(' arrayDimensions=Expression ')'
-//;
-
-//ArrayExpOption5:
 VariableOrArrayOrFunc returns Expression:
 	{VariableOrArrayOrFunc}
 	ref=[Named|ValidID]

@@ -7,12 +7,11 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<xtextVersion>2.14.0</xtextVersion>
+		<xtextVersion>2.16.0-SNAPSHOT</xtextVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>10</maven.compiler.source>
 		<maven.compiler.target>10</maven.compiler.target>
 		<!-- Tycho settings -->
-		<!-- Java 10 and JUnit 5 support require Tycho 1.2.0, which was not released at release date of Xtext 2.14.0. When not available downgrade to Java 9, JUnit 4 and Tycho 1.1.0. -->
 		<tycho-version>1.2.0</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
@@ -24,10 +23,7 @@
 		<module>org.xtext.example.expressiondsl</module>
 		<module>org.xtext.example.expressiondsl.ide</module>
 		<module>org.xtext.example.expressiondsl.ui</module>
-		<module>org.xtext.example.expressiondsl.web</module>
 		<module>org.xtext.example.expressiondsl.target</module>
-		<module>org.xtext.example.expressiondsl.feature</module>
-		<module>org.xtext.example.expressiondsl.repository</module>
 		<module>org.xtext.example.expressiondsl.tests</module>
 		<module>org.xtext.example.expressiondsl.ui.tests</module>
 	</modules>
@@ -38,47 +34,6 @@
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-source-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>plugin-source</id>
-						<goals>
-							<goal>plugin-source</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>source-feature</id>
-						<phase>package</phase>
-						<goals>
-							<goal>source-feature</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>attach-p2-metadata</id>
-						<phase>package</phase>
-						<goals>
-							<goal>p2-metadata</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
