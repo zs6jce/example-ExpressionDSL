@@ -22,10 +22,10 @@ Export-Package: org.xtext.example.expressiondsl,
  org.xtext.example.expressiondsl.validation,
  org.xtext.example.expressiondsl.expressionDSL.impl,
  org.xtext.example.expressiondsl.expressionDSL.util,
- org.xtext.example.expressiondsl.parser.antlr.lexer,
  org.xtext.example.expressiondsl.generator,
  org.xtext.example.expressiondsl.scoping,
  org.xtext.example.expressiondsl.parser.antlr,
  org.xtext.example.expressiondsl.services,
- org.xtext.example.expressiondsl.expressionDSL
+ org.xtext.example.expressiondsl.expressionDSL,
+ org.xtext.example.expressiondsl.parser.antlr.lexer
 Import-Package: org.apache.log4j
