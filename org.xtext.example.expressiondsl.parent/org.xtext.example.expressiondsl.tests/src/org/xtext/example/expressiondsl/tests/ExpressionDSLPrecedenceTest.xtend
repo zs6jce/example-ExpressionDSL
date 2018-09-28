@@ -4,34 +4,12 @@ import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 
-import static extension org.junit.Assert.*
 import org.xtext.example.expressiondsl.expressionDSL.Model
 import org.xtext.example.expressiondsl.expressionDSL.VariableAssignment
-import org.xtext.example.expressiondsl.expressionDSL.Expression
-import org.xtext.example.expressiondsl.expressionDSL.BinaryPlus
-//import org.xtext.example.expressiondsl.expressionDSL.UnaryPlus
-import org.xtext.example.expressiondsl.expressionDSL.BinaryMinus
-//import org.xtext.example.expressiondsl.expressionDSL.UnaryMinus
-import org.xtext.example.expressiondsl.expressionDSL.MulOrDiv
-import org.xtext.example.expressiondsl.expressionDSL.Exponent
-import org.xtext.example.expressiondsl.expressionDSL.And
-import org.xtext.example.expressiondsl.expressionDSL.Or
-//import org.xtext.example.expressiondsl.expressionDSL.Not
-import org.xtext.example.expressiondsl.expressionDSL.IntConstant
-import org.xtext.example.expressiondsl.expressionDSL.BooleanConstant
-import org.xtext.example.expressiondsl.expressionDSL.Comparison
-import org.xtext.example.expressiondsl.expressionDSL.UnaryPlus
-import org.xtext.example.expressiondsl.expressionDSL.UnaryMinus
-import org.xtext.example.expressiondsl.expressionDSL.Not
-import org.xtext.example.expressiondsl.expressionDSL.VariableDef
-import org.xtext.example.expressiondsl.expressionDSL.ConstDef
-import org.xtext.example.expressiondsl.expressionDSL.VariableOrArrayOrFunc
-import org.xtext.example.expressiondsl.expressionDSL.StructDef
-import org.xtext.example.expressiondsl.expressionDSL.SubFieldDef
-import org.xtext.example.expressiondsl.expressionDSL.FunctionDef
 
 import org.xtext.example.expressiondsl.tests.TestUtils
 
@@ -157,9 +135,7 @@ class ExpressionDSLPrecedenceTest {
 		'''.parse
 		var stmt = result.statements.last as VariableAssignment
 		var actual = TestUtils.stringRepr(stmt.exp)
-		assertEquals(expected, actual)
+		Assertions.assertEquals(expected, actual)
 	}
-
-
 
 }

@@ -60,15 +60,15 @@ FunctionCallStatement:
 
 FunctionCall:
 	=> ref=[FunctionDef]
-	(OPEN_PAREN (params+=Expression (':' params+=Expression)*)? CLOSE_PAREN)
+	(OPEN_PAREN (args+=Expression (':' args+=Expression)*)? CLOSE_PAREN)
 ;
 
-VariableOrArrayOrFunc returns Expression:
-	{VariableOrArrayOrFunc}
+VariableArrayOrFunctionRef returns Expression:
+	{VariableArrayOrFunctionRef}
 	ref=[Named|ValidID]
 	(OPEN_PAREN //Optional '()'
 		(  //Optional Parameter '(params)'
-			params+=Expression (ParmSEP params+=Expression)* //One or More optional Parameters '(params1:params2)'
+			args+=Expression (ParmSEP args+=Expression)* //One or More optional Parameters '(params1:params2)'
 		)?
 	CLOSE_PAREN)?
 ;
@@ -135,7 +135,7 @@ UnaryPlusMinusOrNot returns Expression:
 	;
 QualifiedRef returns Expression:
 	Primary	|	
-	VariableOrArrayOrFunc ({QualifiedRef.head=current} QualSEP tail=VariableOrArrayOrFunc)*
+	VariableArrayOrFunctionRef ({QualifiedRef.head=current} QualSEP tail=VariableArrayOrFunctionRef)*
 ;
 
 Primary returns Expression:

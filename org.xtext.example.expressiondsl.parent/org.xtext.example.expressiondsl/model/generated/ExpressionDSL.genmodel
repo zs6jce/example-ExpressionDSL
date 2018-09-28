@@ -40,7 +40,7 @@
     </genClasses>
     <genClasses ecoreClass="ExpressionDSL.ecore#//FunctionCall">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//FunctionCall/ref"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//FunctionCall/params"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//FunctionCall/args"/>
     </genClasses>
     <genClasses ecoreClass="ExpressionDSL.ecore#//Expression"/>
     <genClasses ecoreClass="ExpressionDSL.ecore#//Dim">
@@ -49,9 +49,9 @@
     <genClasses ecoreClass="ExpressionDSL.ecore#//Named">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExpressionDSL.ecore#//Named/name"/>
     </genClasses>
-    <genClasses ecoreClass="ExpressionDSL.ecore#//VariableOrArrayOrFunc">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//VariableOrArrayOrFunc/ref"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//VariableOrArrayOrFunc/params"/>
+    <genClasses ecoreClass="ExpressionDSL.ecore#//VariableArrayOrFunctionRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//VariableArrayOrFunctionRef/ref"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//VariableArrayOrFunctionRef/args"/>
     </genClasses>
     <genClasses ecoreClass="ExpressionDSL.ecore#//Or">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExpressionDSL.ecore#//Or/left"/>

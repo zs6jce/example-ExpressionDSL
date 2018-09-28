@@ -19,7 +19,7 @@ import org.xtext.example.expressiondsl.expressionDSL.SubFieldDef
 import org.xtext.example.expressiondsl.expressionDSL.UnaryMinus
 import org.xtext.example.expressiondsl.expressionDSL.UnaryPlus
 import org.xtext.example.expressiondsl.expressionDSL.VariableDef
-import org.xtext.example.expressiondsl.expressionDSL.VariableOrArrayOrFunc
+import org.xtext.example.expressiondsl.expressionDSL.VariableArrayOrFunctionRef
 
 class TestUtils {
 	
@@ -38,7 +38,7 @@ class TestUtils {
 
 			Exponent: '''(«e.left.stringRepr» ** «e.right.stringRepr»)'''
 
-			VariableOrArrayOrFunc : '''«e.ref.stringRepr»«IF (e.params.length  > 0) || (e.ref instanceof FunctionDef)»(«FOR param: e.params SEPARATOR ':'»«param.stringRepr»«ENDFOR»)«ENDIF»'''
+			VariableArrayOrFunctionRef : '''«e.ref.stringRepr»«IF (e.args.length  > 0) || (e.ref instanceof FunctionDef)»(«FOR param: e.args SEPARATOR ':'»«param.stringRepr»«ENDFOR»)«ENDIF»'''
 
 			UnaryPlus: '''( +«e.expr.stringRepr»)'''
 			UnaryMinus: '''( -«e.expr.stringRepr»)'''			
